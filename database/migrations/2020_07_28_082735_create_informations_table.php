@@ -16,8 +16,20 @@ class CreateInformationsTable extends Migration
         Schema::create('informations', function (Blueprint $table) {
             $table->id();
             $table->string('nom', 30);
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->date('started_at');
+            $table->unsignedBigInteger('tache_id');
             $table->timestamps();
+        });
+        
+        //Foreign Key
+        Schema::table('informations', function (Blueprint $table)
+        {
+            $table->foreign('tache_id')
+                ->references('id')
+                ->on('taches')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

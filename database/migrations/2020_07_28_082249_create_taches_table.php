@@ -17,9 +17,41 @@ class CreateTachesTable extends Migration
             $table->id();
             $table->string('titre', 30);
             $table->string('description', 255);
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('project_id');            
+            $table->enum('etat', ['ATTENTE', 'EN_COURS', 'TERMINE', 'ANNULE', 'VALIDE']);
+            $table->unsignedBigInteger('tache_id')->nullable();
+            $table->date('started_at');
+            $table->date('finished_at');
             $table->timestamps();
+            
         });
+        
+        //Foreign Keys
+        
+        Schema::table('taches', function (Blueprint $table)
+        {
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+            
+            $table->foreign('project_id')
+                ->references('id')
+                ->on('projects')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            
+            $table->foreign('tache_id')
+                ->references('id')
+                ->on('taches')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+        });
+       
     }
+ 
 
     /**
      * Reverse the migrations.
